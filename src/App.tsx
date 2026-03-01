@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Building2, 
@@ -132,8 +132,12 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden text-zinc-900" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X className={scrolled ? 'text-zinc-900' : 'text-white'} /> : <Menu className={scrolled ? 'text-zinc-900' : 'text-white'} />}
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? (
+            <X className={scrolled ? 'text-zinc-900' : 'text-white'} />
+          ) : (
+            <Menu className={scrolled ? 'text-zinc-900' : 'text-white'} />
+          )}
         </button>
       </div>
 
@@ -179,7 +183,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/80 to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20 md:pt-0">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -190,7 +194,7 @@ const Hero = () => {
             <Zap className="w-3 h-3" />
             Han's Laser Korea Official Partner
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+          <h1 className="text-3xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
             미래를 밝히는 <br />
             <span className="text-emerald-500 italic">레이저 기술의 정점</span>
           </h1>
@@ -263,12 +267,12 @@ const About = () => {
             <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-emerald-600 rounded-3xl -z-10 hidden md:block" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-emerald-600 uppercase tracking-widest mb-4">Company Profile</h2>
-            <h3 className="text-4xl font-bold text-zinc-900 mb-6 leading-tight">
-              (주)원공사: <br />
-              산업 엔지니어링의 새로운 기준
+            <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-[0.2em] mb-4">About Us</h2>
+            <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-6 leading-tight">
+              (주)원공사 <br />
+              <span className="text-emerald-600">산업 엔지니어링의 새로운 기준</span>
             </h3>
-            <p className="text-lg text-zinc-600 mb-8 leading-relaxed">
+            <p className="text-base md:text-lg text-zinc-600 mb-8 leading-relaxed">
               (주)원공사는 수년간의 현장 경험과 전문 지식을 바탕으로 대한민국 산업 발전에 기여해 왔습니다. 
               특히 Han's Laser Korea와의 전략적 파트너십을 통해 세계적인 수준의 레이저 가공 기술을 국내 시장에 공급하고 있습니다.
             </p>
@@ -297,9 +301,9 @@ const Services = () => {
     <section id="services" className="py-24 bg-zinc-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-sm font-bold text-emerald-600 uppercase tracking-widest mb-4">Our Services</h2>
-          <h3 className="text-4xl font-bold text-zinc-900 mb-6">핵심 사업 분야</h3>
-          <p className="text-lg text-zinc-600">
+          <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-[0.2em] mb-4">Our Services</h2>
+          <h3 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6">핵심 사업 분야</h3>
+          <p className="text-base md:text-lg text-zinc-600">
             우리는 기술과 신뢰를 바탕으로 고객사의 비즈니스 가치를 극대화하는 최적의 솔루션을 제공합니다.
           </p>
         </div>
@@ -331,9 +335,9 @@ const Projects = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-sm font-bold text-emerald-600 uppercase tracking-widest mb-4">Portfolio</h2>
-            <h3 className="text-4xl font-bold text-zinc-900 mb-6">주요 프로젝트 실적</h3>
-            <p className="text-lg text-zinc-600">
+            <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-[0.2em] mb-4">Portfolio</h2>
+            <h3 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6">주요 프로젝트 실적</h3>
+            <p className="text-base md:text-lg text-zinc-600">
               Han's Laser Korea와 함께 수행한 다양한 산업 분야의 성공 사례를 확인하세요.
             </p>
           </div>
@@ -378,8 +382,28 @@ const Contact = () => {
   const [companyName, setCompanyName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
   const [inquiry, setInquiry] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const submittingRef = useRef(false);
+
+  const validateEmail = (val: string): "valid" | "invalid" => {
+    // 1. 검증을 시작하기 전에 입력값의 앞뒤 공백을 반드시 제거(trim)한다.
+    const trimmed = val.trim();
+    
+    // 2. trim 이후 문자열에 공백 문자(" ")가 하나라도 포함되어 있으면 즉시 invalid 처리한다.
+    if (trimmed.includes(" ")) {
+      return "invalid";
+    }
+    
+    // 3. RFC를 엄격히 따르지 말고, 실사용 기준의 이메일 형식만 검증한다.
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(trimmed)) {
+      return "invalid";
+    }
+    
+    return "valid";
+  };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let numbers = e.target.value.replace(/[^0-9]/g, "");
@@ -399,7 +423,30 @@ const Contact = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("상담 접수 시작...");
+    // 1. 검증 전 이메일 트리밍
+    const trimmedEmail = email.trim();
+    const validationResult = validateEmail(trimmedEmail);
+    
+    if (validationResult === "invalid") {
+      e.preventDefault();
+      setEmailError(true);
+      alert("올바른 이메일 형식을 입력해주세요. (공백 포함 불가)");
+      return;
+    }
+
+    // 트리밍된 이메일로 상태 업데이트 (전송 시 반영되도록)
+    setEmail(trimmedEmail);
+    setEmailError(false);
+    
+    console.log("상담 접수 데이터 전송 준비:", {
+      companyName,
+      userName,
+      phone: phone.replace(/[^0-9]/g, ""),
+      email: trimmedEmail,
+      inquiry
+    });
+    
+    submittingRef.current = true;
     setIsSubmitting(true);
   };
 
@@ -411,12 +458,12 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">
           <div>
-            <h2 className="text-sm font-bold text-emerald-500 uppercase tracking-widest mb-4">Contact Us</h2>
-            <h3 className="text-4xl font-bold mb-8 leading-tight">
+            <h2 className="text-xs font-bold text-emerald-500 uppercase tracking-[0.2em] mb-4">Contact Us</h2>
+            <h3 className="text-3xl md:text-4xl font-bold mb-8 leading-tight">
               전문가와 상담하여 <br />
-              최적의 솔루션을 찾으세요
+              <span className="text-emerald-500">최적의 솔루션을 찾으세요</span>
             </h3>
-            <p className="text-zinc-400 text-lg mb-12">
+            <p className="text-zinc-400 text-base md:text-lg mb-12">
               (주)원공사는 고객의 요구에 귀 기울입니다. 상담 내용을 남겨주시면 빠르게 연락드리겠습니다.
             </p>
             
@@ -482,8 +529,8 @@ const Contact = () => {
               </div>
             ) : (
               <>
-                <h4 className="text-3xl font-bold mb-4 text-center">전자동 상담 접수</h4>
-                <p className="text-zinc-600 text-lg mb-10 text-center leading-relaxed">
+                <h4 className="text-2xl md:text-3xl font-bold mb-4 text-center">전자동 상담 접수</h4>
+                <p className="text-zinc-600 text-base md:text-lg mb-10 text-center leading-relaxed">
                   상담 내용을 남겨주시면 빠르게 연락드리겠습니다.
                 </p>
                 
@@ -498,7 +545,7 @@ const Contact = () => {
                   <input type="hidden" name="entry.1197734588" value={companyName} />
                   <input type="hidden" name="entry.410116931" value={userName} />
                   <input type="hidden" name="entry.220342773" value={phone.replace(/[^0-9]/g, "")} />
-                  <input type="hidden" name="entry.1842282740" value={email} />
+                  <input type="hidden" name="entry.1842282740" value={email.trim()} />
                   <input type="hidden" name="entry.1018759601" value={inquiry} />
                   <input type="hidden" name="entry.1745878659" value="동의합니다" />
 
@@ -549,11 +596,15 @@ const Contact = () => {
                     <input 
                       type="email" 
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (emailError) setEmailError(false);
+                      }}
                       placeholder="이메일" 
                       required 
-                      className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                      className={`w-full bg-zinc-50 border ${emailError ? 'border-red-500' : 'border-zinc-200'} rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all`}
                     />
+                    {emailError && <p className="text-red-500 text-xs mt-1">올바른 이메일 형식을 입력해주세요.</p>}
                   </div>
 
                   {/* 문의내용 */}
@@ -599,10 +650,11 @@ const Contact = () => {
               id="hidden_iframe"
               style={{ display: 'none' }}
               onLoad={() => {
-                if (isSubmitting) {
-                  console.log("구글 폼 전송 완료 확인");
+                if (submittingRef.current) {
+                  console.log("구글 폼 전송 완료 확인 (Ref)");
                   setIsSubmitted(true);
                   setIsSubmitting(false);
+                  submittingRef.current = false;
                 }
               }}
             ></iframe>
@@ -663,19 +715,19 @@ const FloatingButtons = () => {
       {/* 1. 전화 상담 (Mobile Only) */}
       <a
         href="tel:010-6355-8055"
-        className="md:hidden w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+        className="md:hidden w-10 h-10 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
         title="전화 상담"
       >
-        <Phone className="w-6 h-6" />
+        <Phone className="w-4 h-4" />
       </a>
 
       {/* 2. 문자 문의 (Mobile Only) */}
       <a
         href="sms:010-6355-8055"
-        className="md:hidden w-14 h-14 bg-zinc-700 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+        className="md:hidden w-10 h-10 bg-zinc-700 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
         title="문자 문의"
       >
-        <MessageSquare className="w-6 h-6" />
+        <MessageSquare className="w-4 h-4" />
       </a>
 
       {/* 4. 맨 위로 이동 */}
@@ -686,10 +738,10 @@ const FloatingButtons = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={scrollToTop}
-            className="w-14 h-14 bg-white text-zinc-900 rounded-full shadow-lg flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
+            className="w-10 h-10 bg-white text-zinc-900 rounded-full shadow-lg flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
             title="맨 위로"
           >
-            <ArrowUp className="w-6 h-6" />
+            <ArrowUp className="w-4 h-4" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -697,10 +749,10 @@ const FloatingButtons = () => {
       {/* 5. 맨 아래로 이동 */}
       <button
         onClick={scrollToBottom}
-        className="w-14 h-14 bg-white text-zinc-900 rounded-full shadow-lg flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
+        className="w-10 h-10 bg-white text-zinc-900 rounded-full shadow-lg flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
         title="맨 아래로"
       >
-        <ArrowDown className="w-6 h-6" />
+        <ArrowDown className="w-4 h-4" />
       </button>
     </div>
   );
