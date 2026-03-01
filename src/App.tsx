@@ -183,18 +183,18 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/80 to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20 md:pt-0">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-32 md:pt-40">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-2xl"
+          className="max-w-3xl"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6">
             <Zap className="w-3 h-3" />
             Han's Laser Korea Official Partner
           </div>
-          <h1 className="text-3xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
             미래를 밝히는 <br />
             <span className="text-emerald-500 italic">레이저 기술의 정점</span>
           </h1>
